@@ -19,17 +19,17 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        """Retrieve recipes for authenticated user."""
-        return self.queryset.filter(user=self.request.user).order_by('-id')
     
     def get_serializer_class(self):
         """Return the serializer class for request."""
         if self.action == 'list':
             return serializers.RecipeSerializer
-
         return self.serializer_class
+    
+    def get_queryset(self):
+        """Retrieve recipe for authenticated user."""
+        return self.queryset.filter(user=self.request.user).order_by('-id')
+        
     
     def perform_create(self, serializer):
         """Create a new recipe."""
@@ -46,5 +46,5 @@ class TagViewSet(mixins.ListModelMixin, mixins.UpdateModelMixin,
     def get_queryset(self):
         """Filter queryset to authenticated user."""
         return self.queryset.filter(user=self.request.user).order_by('-name')
-
+        
     
